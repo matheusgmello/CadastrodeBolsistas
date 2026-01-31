@@ -1,5 +1,7 @@
 package dev.matheus.CadastroDeBolsistas.Laboratorios.Services;
 
+import dev.matheus.CadastroDeBolsistas.Exceptions.DataConflictException;
+import dev.matheus.CadastroDeBolsistas.Exceptions.ResourceNotFoundException;
 import dev.matheus.CadastroDeBolsistas.Laboratorios.DTOs.LaboratorioDTO;
 import dev.matheus.CadastroDeBolsistas.Laboratorios.Mappers.LaboratorioMapper;
 import dev.matheus.CadastroDeBolsistas.Laboratorios.Models.LaboratorioModel;
@@ -20,7 +22,6 @@ public class LaboratorioService {
         this.laboratorioMapper = laboratorioMapper;
     }
 
-    // Listar todos os laboratórios
     public List<LaboratorioDTO> listarLaboratorios() {
         return laboratorioRepository.findAll()
                 .stream()
@@ -28,44 +29,41 @@ public class LaboratorioService {
                 .toList();
     }
 
-
-    // Listar laboratório por ID
     public LaboratorioDTO listarLaboratorioPorId(Long id) {
-        Optional<LaboratorioModel> labPorId = laboratorioRepository.findById(id);
-        return labPorId.map(laboratorioMapper::map).orElse(null);
+        return laboratorioRepository.findById(id)
+                .map(laboratorioMapper::map)
+                .orElseThrow(() -> new ResourceNotFoundException("Laboratório com ID " + id + " não encontrado."));
     }
 
-    // Criar um novo laboratório
     public LaboratorioDTO criarLaboratorio(LaboratorioDTO laboratorioDTO) {
+        if (laboratorioRepository.existsByNome(laboratorioDTO.getNome())) {
+            throw new DataConflictException("Já existe um laboratório cadastrado com o nome: " + laboratorioDTO.getNome());
+        }
+
         LaboratorioModel lab = laboratorioMapper.map(laboratorioDTO);
-        lab = laboratorioRepository.save(lab);
-        return laboratorioMapper.map(lab);
+        return laboratorioMapper.map(laboratorioRepository.save(lab));
     }
 
-    // Alterar um laboratório existente
     public LaboratorioDTO alterarLaboratorio(Long id, LaboratorioDTO laboratorioDTO) {
         return laboratorioRepository.findById(id)
                 .map(labExistente -> {
-                    if (laboratorioDTO.getNome() != null) {
-                        labExistente.setNome(laboratorioDTO.getNome());
-                    }
-                    if (laboratorioDTO.getAreaDeAtuacao() != null) {
-                        labExistente.setAreaDeAtuacao(laboratorioDTO.getAreaDeAtuacao());
-                    }
-                    if (laboratorioDTO.getBolsistas() != null) {
-                        labExistente.setBolsistas(laboratorioDTO.getBolsistas());
-                    }
+                    if (laboratorioDTO.getNome() != null) labExistente.setNome(laboratorioDTO.getNome());
+                    if (laboratorioDTO.getAreaDeAtuacao() != null) labExistente.setAreaDeAtuacao(laboratorioDTO.getAreaDeAtuacao());
+                    if (laboratorioDTO.getBolsistas() != null) labExistente.setBolsistas(laboratorioDTO.getBolsistas());
 
-                    LaboratorioModel labAtualizado = laboratorioRepository.save(labExistente);
-                    return laboratorioMapper.map(labAtualizado);
+                    return laboratorioMapper.map(laboratorioRepository.save(labExistente));
                 })
-                .orElse(null);
+                .orElseThrow(() -> new ResourceNotFoundException("Não foi possível atualizar: Laboratório ID " + id + " não encontrado."));
     }
 
-    // Deletar um laboratório
     public void deletarLaboratorio(Long id) {
-        Optional<LaboratorioModel> labPorId = laboratorioRepository.findById(id);
-        labPorId.ifPresent(laboratorioRepository::delete);
-    }
+        LaboratorioModel lab = laboratorioRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Não foi possível deletar: Laboratório ID " + id + " não encontrado."));
 
+        if (lab.getBolsistas() != null && !lab.getBolsistas().isEmpty()) {
+            throw new DataConflictException("Não é possível deletar um laboratório que possui bolsistas vinculados.");
+        }
+
+        laboratorioRepository.delete(lab);
+    }
 }

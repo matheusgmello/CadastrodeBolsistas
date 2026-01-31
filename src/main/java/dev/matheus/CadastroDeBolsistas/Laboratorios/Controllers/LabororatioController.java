@@ -31,7 +31,7 @@ public class LabororatioController {
             return ResponseEntity.ok(laboratorioDTO);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("A Missao com ID " + id + " não foi encontrada.");
+                    .body("O Laboratório com ID " + id + " não foi encontrada.");
         }
     }
 

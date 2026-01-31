@@ -4,12 +4,13 @@ import dev.matheus.CadastroDeBolsistas.Bolsistas.DTOs.BolsistaDTO;
 import dev.matheus.CadastroDeBolsistas.Bolsistas.Mappers.BolsistaMapper;
 import dev.matheus.CadastroDeBolsistas.Bolsistas.Models.BolsistaModel;
 import dev.matheus.CadastroDeBolsistas.Bolsistas.Repositories.BolsistaRepository;
+import dev.matheus.CadastroDeBolsistas.Exceptions.DataConflictException;
+import dev.matheus.CadastroDeBolsistas.Exceptions.ResourceNotFoundException;
 import dev.matheus.CadastroDeBolsistas.Laboratorios.Models.LaboratorioModel;
 import dev.matheus.CadastroDeBolsistas.Laboratorios.Repositories.LaboratorioRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BolsistaService {
@@ -35,23 +36,26 @@ public class BolsistaService {
 
     // Lista bolsista por ID
     public BolsistaDTO listaBolsistaPorId(Long id) {
-        Optional<BolsistaModel> bolsistaPorId = bolsistaRepository.findById(id);
-        return bolsistaPorId.map(bolsistaMapper::map).orElse(null);
+        return bolsistaRepository.findById(id)
+                .map(bolsistaMapper::map)
+                .orElseThrow(() -> new ResourceNotFoundException("Bolsista com ID " + id + " não encontrado."));
     }
 
-    // Criar um novo bolsista atualizado
+    // Criar um novo bolsista
     public BolsistaDTO criarBolsista(BolsistaDTO bolsistaDTO) {
+        if (bolsistaRepository.existsByEmail(bolsistaDTO.getEmail())) {
+            throw new DataConflictException("Já existe um bolsista cadastrado com o e-mail: " + bolsistaDTO.getEmail());
+        }
+
         BolsistaModel bolsista = bolsistaMapper.map(bolsistaDTO);
 
-        // Buscamos o laboratório completo para que o JSON de resposta venha preenchido
         if (bolsista.getLaboratorio() != null && bolsista.getLaboratorio().getId() != null) {
             LaboratorioModel lab = laboratorioRepository.findById(bolsista.getLaboratorio().getId())
-                    .orElseThrow(() -> new RuntimeException("Laboratório não encontrado"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Laboratório com ID " + bolsista.getLaboratorio().getId() + " não existe."));
             bolsista.setLaboratorio(lab);
         }
 
-        bolsista = bolsistaRepository.save(bolsista);
-        return bolsistaMapper.map(bolsista);
+        return bolsistaMapper.map(bolsistaRepository.save(bolsista));
     }
 
     // Alterar um bolsista atualizado
@@ -63,23 +67,22 @@ public class BolsistaService {
                     if (bolsistaDTO.getEmail() != null) bolsistaExistente.setEmail(bolsistaDTO.getEmail());
                     if (bolsistaDTO.getNivelBolsa() != null)
                         bolsistaExistente.setNivelBolsa(bolsistaDTO.getNivelBolsa());
-
-                    // Se o laboratório for alterado, buscamos o novo completo
                     if (bolsistaDTO.getLaboratorio() != null && bolsistaDTO.getLaboratorio().getId() != null) {
                         LaboratorioModel novoLab = laboratorioRepository.findById(bolsistaDTO.getLaboratorio().getId())
-                                .orElseThrow(() -> new RuntimeException("Laboratório não encontrado"));
+                                .orElseThrow(() -> new ResourceNotFoundException("Laboratório não encontrado"));
                         bolsistaExistente.setLaboratorio(novoLab);
                     }
-
-                    BolsistaModel bolsistaAtualizado = bolsistaRepository.save(bolsistaExistente);
-                    return bolsistaMapper.map(bolsistaAtualizado);
+                    return bolsistaMapper.map(bolsistaRepository.save(bolsistaExistente));
                 })
-                .orElse(null);
+                .orElseThrow(() -> new ResourceNotFoundException("Bolsista com ID " + id + " não encontrado."));
     }
+
 
     // Deletar um bolsista
     public void deletarBolsista(Long id) {
-        Optional<BolsistaModel> bolsistaPorId = bolsistaRepository.findById(id);
-        bolsistaPorId.ifPresent(bolsistaRepository::delete);
+        if (!bolsistaRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Impossível deletar: Bolsista com ID " + id + " não encontrado.");
+        }
+        bolsistaRepository.deleteById(id);
     }
 }
