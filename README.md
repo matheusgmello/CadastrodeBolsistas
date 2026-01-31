@@ -192,3 +192,6 @@ Deletar:
 curl -X DELETE http://localhost:8080/api/bolsistas/1
 ```
 
+## Interface do Projeto
+
+![Interface do Projeto](images/interface.png)
