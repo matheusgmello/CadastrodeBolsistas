@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/laboratorios")
+@RequestMapping("/api/laboratorios")
 @RequiredArgsConstructor
 @Tag(name = "Laboratórios", description = "Endpoints para gerenciamento de laboratórios acadêmicos")
 public class LaboratorioController {

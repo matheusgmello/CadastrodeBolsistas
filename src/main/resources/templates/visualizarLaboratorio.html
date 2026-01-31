@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Visualizar Laboratório')}"></head>
+<body>
+<div th:replace="~{fragments :: navbar}"></div>
+<div class="container mt-3">
+    <div class="card shadow-sm mx-auto" style="max-width: 800px;">
+        <div class="card-header bg-info text-white">
+            <h4 class="mb-0">Detalhes do Laboratório</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-4">Nome</dt>
+                <dd class="col-sm-8" th:text="${laboratorio.nome}"></dd>
+
+                <dt class="col-sm-4">Área de Atuação</dt>
+                <dd class="col-sm-8" th:text="${laboratorio.areaDeAtuacao}"></dd>
+            </dl>
+
+            <h5>Bolsistas alocados</h5>
+            <ul>
+                <li th:each="b : ${laboratorio.bolsistas}" th:text="${b.nome}"></li>
+            </ul>
+
+            <div class="d-flex gap-2">
+                <a th:href="@{/laboratorios/ui/editar/{id}(id=${laboratorio.id})}" class="btn btn-warning">Editar</a>
+                <a th:href="@{/laboratorios/ui/listar}" class="btn btn-outline-secondary">Voltar</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/bolsistas")
+@RequestMapping("/api/bolsistas")
 @RequiredArgsConstructor
 @Tag(name = "Bolsistas", description = "Endpoints para gerenciamento de bolsistas acadêmicos")
 public class BolsistaController {

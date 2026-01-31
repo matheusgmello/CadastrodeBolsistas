@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Editar Laboratório')}"></head>
+<body>
+<div th:replace="~{fragments :: navbar}"></div>
+<div class="container">
+    <div class="card shadow-sm mx-auto" style="max-width: 600px;">
+        <div class="card-header bg-warning text-dark">
+            <h4 class="mb-0">Editar Laboratório</h4>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/laboratorios/ui/atualizar/{id}(id=${laboratorio.id})}" th:object="${laboratorio}" method="post">
+                <input type="hidden" th:field="*{id}" />
+                <div class="mb-3">
+                    <label class="form-label">Nome do Laboratório:</label>
+                    <input type="text" th:field="*{nome}" class="form-control" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Área de Atuação:</label>
+                    <input type="text" th:field="*{areaDeAtuacao}" class="form-control" required />
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Atualizar</button>
+                    <a th:href="@{/laboratorios/ui/listar}" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Listar Laboratórios')}"></head>
+<body>
+<div th:replace="~{fragments :: navbar}"></div>
+<div class="container">
+    <div th:replace="~{fragments :: mensagens}"></div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Laboratórios</h3>
+        <a th:href="@{/laboratorios/ui/adicionar}" class="btn btn-primary">Novo Laboratório</a>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Área de Atuação</th>
+            <th>Quantidade Bolsistas</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="l : ${laboratorios}">
+            <td th:text="${l.nome}"></td>
+            <td th:text="${l.areaDeAtuacao}"></td>
+            <td th:text="${l.bolsistas != null ? l.bolsistas.size() : 0}"></td>
+            <td>
+                <a th:href="@{/laboratorios/ui/visualizar/{id}(id=${l.id})}" class="btn btn-sm btn-info">Visualizar</a>
+                <a th:href="@{/laboratorios/ui/editar/{id}(id=${l.id})}" class="btn btn-sm btn-warning">Editar</a>
+                <a th:href="@{/laboratorios/ui/excluir/{id}(id=${l.id})}" class="btn btn-sm btn-danger">Excluir</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

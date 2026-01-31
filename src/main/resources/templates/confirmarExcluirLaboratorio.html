@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Confirmar Exclusão - Laboratório')}"></head>
+<body>
+<div th:replace="~{fragments :: navbar}"></div>
+<div class="container mt-4">
+    <div class="card shadow-sm mx-auto" style="max-width: 600px;">
+        <div class="card-body">
+            <h5>Tem certeza que deseja excluir o laboratório <strong th:text="${laboratorio.nome}"></strong>?</h5>
+            <p class="text-danger">Esta ação não pode ser desfeita. Verifique se não há bolsistas alocados.</p>
+            <form th:action="@{/laboratorios/ui/deletar/{id}(id=${laboratorio.id})}" method="post">
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-danger">Sim, excluir</button>
+                    <a th:href="@{/laboratorios/ui/listar}" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

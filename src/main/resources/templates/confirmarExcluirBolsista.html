@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Confirmar Exclusão - Bolsista')}"></head>
+<body>
+<div th:replace="~{fragments :: navbar}"></div>
+<div class="container mt-4">
+    <div class="card shadow-sm mx-auto" style="max-width: 600px;">
+        <div class="card-body">
+            <h5>Tem certeza que deseja excluir o bolsista <strong th:text="${bolsista.nome}"></strong>?</h5>
+            <p class="text-danger">Esta ação não pode ser desfeita.</p>
+            <form th:action="@{/bolsistas/ui/deletar/{id}(id=${bolsista.id})}" method="post">
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-danger">Sim, excluir</button>
+                    <a th:href="@{/bolsistas/ui/listar}" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

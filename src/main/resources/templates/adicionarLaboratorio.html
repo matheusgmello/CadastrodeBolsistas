@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Adicionar Laboratório')}"></head>
+<body>
+<div th:replace="~{fragments :: navbar}"></div>
+<div class="container">
+    <div class="card shadow-sm mx-auto" style="max-width: 600px;">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Cadastrar Novo Laboratório</h4>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/laboratorios/ui/salvar}" th:object="${laboratorio}" method="post">
+                <div class="mb-3">
+                    <label class="form-label">Nome do Laboratório:</label>
+                    <input type="text" th:field="*{nome}" class="form-control" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Área de Atuação:</label>
+                    <input type="text" th:field="*{areaDeAtuacao}" class="form-control" required />
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-success">Salvar Laboratório</button>
+                    <a th:href="@{/laboratorios/ui/listar}" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

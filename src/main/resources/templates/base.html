@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('UFSM - Gestão de Bolsas')}"></head>
+<body>
+<div th:replace="~{fragments :: navbar}"></div>
+<div class="container">
+    <div th:replace="~{fragments :: mensagens}"></div>
+    <div th:fragment="content">
+        <!-- Conteúdo das páginas -->
+    </div>
+</div>
+</body>
+</html>

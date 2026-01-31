@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Editar Bolsista')}"></head>
+<body>
+<div th:replace="~{fragments :: navbar}"></div>
+<div class="container">
+    <div th:replace="~{fragments :: mensagens}"></div>
+
+    <div class="card shadow-sm mx-auto" style="max-width: 600px;">
+        <div class="card-header bg-warning text-dark">
+            <h4 class="mb-0">Editar Bolsista</h4>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/bolsistas/ui/atualizar/{id}(id=${bolsista.id})}" th:object="${bolsista}" method="post">
+                <input type="hidden" th:field="*{id}" />
+                <div class="mb-3">
+                    <label class="form-label">Nome Completo:</label>
+                    <input type="text" th:field="*{nome}" class="form-control" required />
+                    <div class="text-danger" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Email Institucional:</label>
+                    <input type="email" th:field="*{email}" class="form-control" required />
+                    <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Idade:</label>
+                        <input type="number" th:field="*{idade}" class="form-control" required />
+                        <div class="text-danger" th:if="${#fields.hasErrors('idade')}" th:errors="*{idade}"></div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Nível da Bolsa:</label>
+                        <select th:field="*{nivelBolsa}" class="form-select" required>
+                            <option value="" th:if="${bolsista.nivelBolsa == null}">Selecione...</option>
+                            <option th:each="nivel : ${niveis}" th:value="${nivel}" th:text="${nivel}" th:selected="${nivel == bolsista.nivelBolsa}"></option>
+                        </select>
+                        <div class="text-danger" th:if="${#fields.hasErrors('nivelBolsa')}" th:errors="*{nivelBolsa}"></div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Laboratório Alocado:</label>
+                    <select th:field="*{laboratorio.id}" class="form-select" required>
+                        <option value="" th:if="${bolsista.laboratorio == null}">Selecione o Laboratório...</option>
+                        <option th:each="lab : ${laboratorios}" th:value="${lab.id}" th:text="${lab.nome}" th:selected="${bolsista.laboratorio != null and lab.id == bolsista.laboratorio.id}"></option>
+                    </select>
+                    <div class="text-danger" th:if="${#fields.hasErrors('laboratorio')}" th:errors="*{laboratorio}"></div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Atualizar</button>
+                    <a th:href="@{/bolsistas/ui/listar}" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

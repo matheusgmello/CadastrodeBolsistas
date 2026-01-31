@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Listar Bolsistas')}"></head>
+<body>
+<div th:replace="~{fragments :: navbar}"></div>
+<div class="container">
+    <div th:replace="~{fragments :: mensagens}"></div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Bolsistas</h3>
+        <a th:href="@{/bolsistas/ui/adicionar}" class="btn btn-primary">Novo Bolsista</a>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Idade</th>
+            <th>Nível</th>
+            <th>Laboratório</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="b : ${bolsistas}">
+            <td th:text="${b.nome}"></td>
+            <td th:text="${b.email}"></td>
+            <td th:text="${b.idade}"></td>
+            <td th:text="${b.nivelBolsa}"></td>
+            <td th:text="${b.laboratorio != null ? b.laboratorio.nome : '—'}"></td>
+            <td>
+                <a th:href="@{/bolsistas/ui/visualizar/{id}(id=${b.id})}" class="btn btn-sm btn-info">Visualizar</a>
+                <a th:href="@{/bolsistas/ui/editar/{id}(id=${b.id})}" class="btn btn-sm btn-warning">Editar</a>
+                <a th:href="@{/bolsistas/ui/excluir/{id}(id=${b.id})}" class="btn btn-sm btn-danger">Excluir</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

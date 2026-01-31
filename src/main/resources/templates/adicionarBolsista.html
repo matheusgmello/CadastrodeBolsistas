@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Adicionar Bolsista')}"></head>
+<body>
+<div th:replace="~{fragments :: navbar}"></div>
+
+<div class="container">
+    <div class="card shadow-sm mx-auto" style="max-width: 600px;">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Cadastrar Novo Bolsista</h4>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/bolsistas/ui/salvar}" th:object="${bolsista}" method="post">
+                <div class="mb-3">
+                    <label class="form-label">Nome Completo:</label>
+                    <input type="text" th:field="*{nome}" class="form-control" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Email Institucional:</label>
+                    <input type="email" th:field="*{email}" class="form-control" required />
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Idade:</label>
+                        <input type="number" th:field="*{idade}" class="form-control" required />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Nível da Bolsa:</label>
+                        <select th:field="*{nivelBolsa}" class="form-select" required>
+                            <option value="" selected>Selecione...</option>
+                            <option th:each="nivel : ${niveis}" th:value="${nivel}" th:text="${nivel}"></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Laboratório Alocado:</label>
+                    <select th:field="*{laboratorio.id}" class="form-select" required>
+                        <option value="" selected>Selecione o Laboratório...</option>
+                        <option th:each="lab : ${laboratorios}" th:value="${lab.id}" th:text="${lab.nome}"></option>
+                    </select>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-success">Salvar Bolsista</button>
+                    <a th:href="@{/bolsistas/ui/listar}" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

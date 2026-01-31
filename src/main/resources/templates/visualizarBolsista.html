@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Visualizar Bolsista')}"></head>
+<body>
+<div th:replace="~{fragments :: navbar}"></div>
+<div class="container mt-3">
+    <div class="card shadow-sm mx-auto" style="max-width: 700px;">
+        <div class="card-header bg-info text-white">
+            <h4 class="mb-0">Detalhes do Bolsista</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-4">Nome</dt>
+                <dd class="col-sm-8" th:text="${bolsista.nome}"></dd>
+
+                <dt class="col-sm-4">Email</dt>
+                <dd class="col-sm-8" th:text="${bolsista.email}"></dd>
+
+                <dt class="col-sm-4">Idade</dt>
+                <dd class="col-sm-8" th:text="${bolsista.idade}"></dd>
+
+                <dt class="col-sm-4">Nível</dt>
+                <dd class="col-sm-8" th:text="${bolsista.nivelBolsa}"></dd>
+
+                <dt class="col-sm-4">Laboratório</dt>
+                <dd class="col-sm-8" th:text="${bolsista.laboratorio != null ? bolsista.laboratorio.nome : '—'}"></dd>
+            </dl>
+
+            <div class="d-flex gap-2">
+                <a th:href="@{/bolsistas/ui/editar/{id}(id=${bolsista.id})}" class="btn btn-warning">Editar</a>
+                <a th:href="@{/bolsistas/ui/listar}" class="btn btn-outline-secondary">Voltar</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
