@@ -12,6 +12,7 @@ Sistema de cadastro de bolsistas acadêmicos organizado em camadas, desenvolvido
 - [Passo a passo](#passo-a-passo)
 - [Docker / Docker Compose](#docker--docker-compose)
 - [Padrões do projeto](#padr%C3%B5es-do-projeto)
+- [Testes](#testes)
 - [Endpoints REST](#endpoints-rest)
 - [Rotas UI (Thymeleaf)](#rotas-ui-thymeleaf)
 - [Exemplos rápidos de uso](#exemplos-r%C3%A1pidos-de-uso)
@@ -119,6 +120,34 @@ docker-compose down
 - Migrações: Flyway (scripts em `src/main/resources/db/migration`)
 - Swagger: `/swagger/index.html` (UI) e `/api/api-docs` (JSON)
 - Templates Thymeleaf: `src/main/resources/templates` (UI para bolsistas e laboratórios)
+
+## Testes
+
+O projeto conta com uma suíte de testes unitários e de integração para garantir a qualidade e o funcionamento correto das regras de negócio e endpoints.
+
+### Cobertura de Testes
+
+**Testes Unitários (JUnit 5 + Mockito)**
+- `BolsistaServiceTest`: Validação de criação, atualização, deleção e listagem de bolsistas, incluindo cenários de erro (e-mail duplicado, laboratório inexistente).
+- `LaboratorioServiceTest`: Testes de CRUD de laboratórios e regras de integridade (ex.: impedir deleção de laboratório com bolsistas vinculados).
+
+**Testes de Integração (Spring Boot Test + MockMvc + H2)**
+- `BolsistaControllerIT`: Testes ponta a ponta dos endpoints de bolsistas utilizando banco de dados H2 em memória.
+- `LaboratorioControllerIT`: Testes ponta a ponta dos endpoints de laboratórios.
+
+### Executando os testes
+
+Para rodar todos os testes da aplicação, utilize o comando:
+
+```bash
+# Unix / Git Bash
+./mvnw test
+
+# Windows (PowerShell/CMD)
+./mvnw.cmd test
+```
+
+Os testes de integração utilizam um profile configurado em `src/test/resources/application.yaml` que sobe um banco H2 automaticamente, não sendo necessário configurar um banco PostgreSQL externo para a execução dos testes.
 
 ## Endpoints REST
 
